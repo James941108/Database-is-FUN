@@ -16,19 +16,19 @@ Login form
 		$username = trim($_POST['username']);
 		$password = trim($_POST['password']);
 		$captcha = trim($_POST['captcha']);
-		if($captcha == '007'){
-			$query = "SELECT * FROM AA_LOGIN WHERE username='$username' and password='$password'";
-			$parseRequest = oci_parse($conn, $query);
-			oci_execute($parseRequest);
-			// Fetch each row in an associative array
-			$row = oci_fetch_array($parseRequest, OCI_RETURN_NULLS+OCI_ASSOC);
-			if($row){
-				$_SESSION['ID'] = $row['ID'];
-				$_SESSION['NAME'] = $row['NAME'];
-				$_SESSION['SURNAME'] = $row['SURNAME'];
-				echo '<script>window.location = "MemberPage.php";</script>';
-			}
-		}else{
+		$query = "SELECT * FROM AA_LOGIN WHERE username='$username' and password='$password'";
+		$parseRequest = oci_parse($conn, $query);
+		oci_execute($parseRequest);
+		// Fetch each row in an associative array
+		$row = oci_fetch_array($parseRequest, OCI_RETURN_NULLS+OCI_ASSOC);
+
+		if($row && ($captcha == '007')){
+			$_SESSION['ID'] = $row['ID'];
+			$_SESSION['NAME'] = $row['NAME'];
+			$_SESSION['SURNAME'] = $row['SURNAME'];
+			echo '<script>window.location = "MemberPage.php";</script>';
+		}
+		else{
 			echo "Login fail.";
 		}
 	};
